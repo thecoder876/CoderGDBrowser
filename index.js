@@ -37,11 +37,11 @@ let sampleIcons = require('./misc/sampleIcons.json')
 let achievements = require('./misc/achievements.json')
 let achievementTypes = require('./misc/achievementTypes.json')
 let shopIcons = require('./misc/shops.json')
-let colorList = require('./icons/colors.json')
 let music = require('./misc/music.json')
 
-let gdIcons = fs.readdirSync('./assets/previewicons')
+let colorList = JSON.parse(fs.readFileSync('./icons/colors.json', 'utf8')) // need a clone of this
 let assetPage = fs.readFileSync('./html/assets.html', 'utf8')
+let gdIcons = fs.readdirSync('./assets/previewicons')
 let whiteIcons = fs.readdirSync('./icons').filter(x => x.endsWith("extra_001.png")).map(function (x) { let xh = x.split("_"); return [xh[1] == "ball" ? "ball" : forms[xh[0]] || xh[0], +xh[xh[1] == "ball" ? 2 : 1]]})
 
 app.accountCache = {}
@@ -122,7 +122,7 @@ app.timeSince = function(id, time) {
 }
 
 app.userCache = function(id, accountID, playerID, name) {
-  if (!accountID || !app.config.cacheAccountIDs) return
+  if (!accountID || accountID == "0" || !app.config.cacheAccountIDs) return
   if (!playerID) return app.accountCache[id][accountID.toLowerCase()]
   let cacheStuff = [accountID, playerID, name]
   app.accountCache[id][name.toLowerCase()] = cacheStuff
